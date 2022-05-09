@@ -16,94 +16,44 @@ import javax.swing.JFrame;
  */
 public class SnakeGame extends JFrame {
 		
-	/**
-	 * The Serial Version UID.
-	 */
-	private static final long serialVersionUID = 6678292058307426314L;
+	protected static final long serialVersionUID = 6678292058307426314L;
 
-	/**
-	 * The number of milliseconds that should pass between each frame.
-	 */
-	private static final long FRAME_TIME = 1000L / 50L;
+	protected static final long FRAME_TIME = 1000L / 50L;
 	
-	/**
-	 * The minimum length of the snake. This allows the snake to grow
-	 * right when the game starts, so that we're not just a head moving
-	 * around on the board.
-	 */
-	private static final int MIN_SNAKE_LENGTH = 5;
+	protected static final int MIN_SNAKE_LENGTH = 5;
 	
-	/**
-	 * The maximum number of directions that we can have polled in the
-	 * direction list.
-	 */
-	private static final int MAX_DIRECTIONS = 3;
+	protected static final int MAX_DIRECTIONS = 3;
 	
-	/**
-	 * The BoardPanel instance.
-	 */
-	private BoardPanel board;
+	protected BoardPanel board;
 	
-	/**
-	 * The SidePanel instance.
-	 */
-	private SidePanel side;
+	protected SidePanel side;
 	
-	/**
-	 * The random number generator (used for spawning fruits).
-	 */
-	private Random random;
+	protected Random random;
 	
-	/**
-	 * The Clock instance for handling the game logic.
-	 */
-	private Clock logicTimer;
+	protected Clock logicTimer;
 	
-	/**
-	 * Whether or not we're running a new game.
-	 */
-	private boolean isNewGame;
+	protected boolean isNewGame;
 		
-	/**
-	 * Whether or not the game is over.
-	 */
-	private boolean isGameOver;
+	protected boolean isGameOver;
 	
-	/**	
-	 * Whether or not the game is paused.
-	 */
-	private boolean isPaused;
+	protected boolean isPaused;
 	
-	/**
-	 * The list that contains the points for the snake.
-	 */
-	private LinkedList<Point> snake;
+	protected LinkedList<Point> snake;
 	
-	/**
-	 * The list that contains the queued directions.
-	 */
-	private LinkedList<Direction> directions;
+	protected LinkedList<Direction> directions;
 	
-	/**
-	 * The current score.
-	 */
-	private int score;
+	protected int score;
 	
-	/**
-	 * The number of fruits that we've eaten.
-	 */
-	private int fruitsEaten;
+	protected int fruitsEaten;
 	
-	/**
-	 * The number of points that the next fruit will award us.
-	 */
-	private int nextFruitScore;
+	protected int nextFruitScore;
 	
 	/**
 	 * Creates a new SnakeGame instance. Creates a new window,
 	 * and sets up the controller input.
 	 */
-	private SnakeGame() {
+	@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+	public SnakeGame() {
 		super("Snake Remake");
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -125,7 +75,7 @@ public class SnakeGame extends JFrame {
 			
 			@Override
 			public void keyPressed(KeyEvent e) {
-				switch(e.getKeyCode()) {
+				switch(e.getKeyCode()) { // switch node 2
 
 				/*
 				 * If the game is not paused, and the game is not over...
@@ -135,11 +85,11 @@ public class SnakeGame extends JFrame {
 				 * direction to the list.
 				 */
 				case KeyEvent.VK_W:
-				case KeyEvent.VK_UP:
+				case KeyEvent.VK_UP: // node 3
 					if(!isPaused && !isGameOver) {
-						if(directions.size() < MAX_DIRECTIONS) {
-							Direction last = directions.peekLast();
-							if(last != Direction.South && last != Direction.North) {
+						if(directions.size() < MAX_DIRECTIONS) { //if true,->
+							Direction last = directions.peekLast(); //
+							if(last != Direction.South && last != Direction.North) { //
 								directions.addLast(Direction.North);
 							}
 						}
@@ -154,7 +104,7 @@ public class SnakeGame extends JFrame {
 				 * direction to the list.
 				 */	
 				case KeyEvent.VK_S:
-				case KeyEvent.VK_DOWN:
+				case KeyEvent.VK_DOWN: // node 4
 					if(!isPaused && !isGameOver) {
 						if(directions.size() < MAX_DIRECTIONS) {
 							Direction last = directions.peekLast();
@@ -173,7 +123,7 @@ public class SnakeGame extends JFrame {
 				 * direction to the list.
 				 */						
 				case KeyEvent.VK_A:
-				case KeyEvent.VK_LEFT:
+				case KeyEvent.VK_LEFT: // node 5
 					if(!isPaused && !isGameOver) {
 						if(directions.size() < MAX_DIRECTIONS) {
 							Direction last = directions.peekLast();
@@ -192,7 +142,7 @@ public class SnakeGame extends JFrame {
 				 * direction to the list.
 				 */		
 				case KeyEvent.VK_D:
-				case KeyEvent.VK_RIGHT:
+				case KeyEvent.VK_RIGHT: // node 6
 					if(!isPaused && !isGameOver) {
 						if(directions.size() < MAX_DIRECTIONS) {
 							Direction last = directions.peekLast();
@@ -207,7 +157,7 @@ public class SnakeGame extends JFrame {
 				 * If the game is not over, toggle the paused flag and update
 				 * the logicTimer's pause flag accordingly.
 				 */
-				case KeyEvent.VK_P:
+				case KeyEvent.VK_P: // node 7
 					if(!isGameOver) {
 						isPaused = !isPaused;
 						logicTimer.setPaused(isPaused);
@@ -217,7 +167,7 @@ public class SnakeGame extends JFrame {
 				/*
 				 * Reset the game if one is not currently in progress.
 				 */
-				case KeyEvent.VK_ENTER:
+				case KeyEvent.VK_ENTER: // node 8
 					if(isNewGame || isGameOver) {
 						resetGame();
 					}
@@ -235,11 +185,43 @@ public class SnakeGame extends JFrame {
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
-	
+
+	/**
+	 * The Serial Version UID.
+	 */
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+	/**
+	 * The number of milliseconds that should pass between each frame.
+	 */
+	public static long getFrameTime() {
+		return FRAME_TIME;
+	}
+
+	/**
+	 * The minimum length of the snake. This allows the snake to grow
+	 * right when the game starts, so that we're not just a head moving
+	 * around on the board.
+	 */
+	public static int getMinSnakeLength() {
+		return MIN_SNAKE_LENGTH;
+	}
+
+	/**
+	 * The maximum number of directions that we can have polled in the
+	 * direction list.
+	 */
+	public static int getMaxDirections() {
+		return MAX_DIRECTIONS;
+	}
+
 	/**
 	 * Starts the game running.
 	 */
-	private void startGame() {
+	@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+	public void startGame() {
 		/*
 		 * Initialize everything we're going to be using.
 		 */
@@ -293,7 +275,8 @@ public class SnakeGame extends JFrame {
 	/**
 	 * Updates the game's logic.
 	 */
-	private void updateGame() {
+	@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+	public void updateGame() {
 		/*
 		 * Gets the type of tile that the head of the snake collided with. If 
 		 * the snake hit a wall, SnakeBody will be returned, as both conditions
@@ -331,7 +314,8 @@ public class SnakeGame extends JFrame {
 	 * Updates the snake's position and size.
 	 * @return Tile tile that the head moved into.
 	 */
-	private TileType updateSnake() {
+	@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+	public TileType updateSnake() {
 
 		/*
 		 * Here we peek at the next direction rather than polling it. While
@@ -415,7 +399,8 @@ public class SnakeGame extends JFrame {
 	/**
 	 * Resets the game's variables to their default states and starts a new game.
 	 */
-	private void resetGame() {
+	@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+	public void resetGame() {
 		/*
 		 * Reset the score statistics. (Note that nextFruitPoints is reset in
 		 * the spawnFruit function later on).
@@ -445,7 +430,7 @@ public class SnakeGame extends JFrame {
 		 */
 		board.clearBoard();
 		board.setTile(head, TileType.SnakeHead);
-		
+		 
 		/*
 		 * Clear the directions and add north as the
 		 * default direction.
@@ -465,6 +450,8 @@ public class SnakeGame extends JFrame {
 	}
 	
 	/**
+	 * Whether or not we're running a new game.
+	 */ /**
 	 * Gets the flag that indicates whether or not we're playing a new game.
 	 * @return The new game flag.
 	 */
@@ -473,6 +460,8 @@ public class SnakeGame extends JFrame {
 	}
 	
 	/**
+	 * Whether or not the game is over.
+	 */ /**
 	 * Gets the flag that indicates whether or not the game is over.
 	 * @return The game over flag.
 	 */
@@ -481,6 +470,8 @@ public class SnakeGame extends JFrame {
 	}
 	
 	/**
+	 * Whether or not the game is paused.
+	 */ /**
 	 * Gets the flag that indicates whether or not the game is paused.
 	 * @return The paused flag.
 	 */
@@ -491,7 +482,8 @@ public class SnakeGame extends JFrame {
 	/**
 	 * Spawns a new fruit onto the board.
 	 */
-	private void spawnFruit() {
+	@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+	public void spawnFruit() {
 		//Reset the score for this fruit to 100.
 		this.nextFruitScore = 100;
 
@@ -525,6 +517,8 @@ public class SnakeGame extends JFrame {
 	}
 	
 	/**
+	 * The current score.
+	 */ /**
 	 * Gets the current score.
 	 * @return The score.
 	 */
@@ -533,6 +527,8 @@ public class SnakeGame extends JFrame {
 	}
 	
 	/**
+	 * The number of fruits that we've eaten.
+	 */ /**
 	 * Gets the number of fruits eaten.
 	 * @return The fruits eaten.
 	 */
@@ -541,6 +537,8 @@ public class SnakeGame extends JFrame {
 	}
 	
 	/**
+	 * The number of points that the next fruit will award us.
+	 */ /**
 	 * Gets the next fruit score.
 	 * @return The next fruit score.
 	 */
@@ -561,8 +559,97 @@ public class SnakeGame extends JFrame {
 	 * @param args Unused.
 	 */
 	public static void main(String[] args) {
-		SnakeGame snake = new SnakeGame();
+			SnakeGame snake = new SnakeGame();
 		snake.startGame();
 	}
 
+	/**
+	 * The BoardPanel instance.
+	 */
+	public BoardPanel getBoard() {
+		return board;
+	}
+
+	public void setBoard(BoardPanel board) {
+		this.board = board;
+	}
+
+	/**
+	 * The SidePanel instance.
+	 */
+	public SidePanel getSide() {
+		return side;
+	}
+
+	public void setSide(SidePanel side) {
+		this.side = side;
+	}
+
+	/**
+	 * The random number generator (used for spawning fruits).
+	 */
+	public Random getRandom() {
+		return random;
+	}
+
+	public void setRandom(Random random) {
+		this.random = random;
+	}
+
+	/**
+	 * The Clock instance for handling the game logic.
+	 */
+	public Clock getLogicTimer() {
+		return logicTimer;
+	}
+
+	public void setLogicTimer(Clock logicTimer) {
+		this.logicTimer = logicTimer;
+	}
+
+	public void setNewGame(boolean newGame) {
+		isNewGame = newGame;
+	}
+
+	public void setGameOver(boolean gameOver) {
+		isGameOver = gameOver;
+	}
+
+	public void setPaused(boolean paused) {
+		isPaused = paused;
+	}
+
+	/**
+	 * The list that contains the points for the snake.
+	 */
+	public LinkedList<Point> getSnake() {
+		return snake;
+	}
+
+	public void setSnake(LinkedList<Point> snake) {
+		this.snake = snake;
+	}
+
+	/**
+	 * The list that contains the queued directions.
+	 */
+	public LinkedList<Direction> getDirections() {
+		return directions;
+	}
+
+	public void setDirections(LinkedList<Direction> directions) {
+		this.directions = directions;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public void setFruitsEaten(int fruitsEaten) {
+		this.fruitsEaten = fruitsEaten;
+	}
+
+	public void setNextFruitScore(int nextFruitScore) {
+		this.nextFruitScore = nextFruitScore;
+	}
 }
