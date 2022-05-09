@@ -1,5 +1,3 @@
-package org.psnbtech;
-
 /**
  * The {@code Direction} enum is used to determine which way the Snake is moving.
  * @author Brendan Jones

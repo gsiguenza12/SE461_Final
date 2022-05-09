@@ -1,5 +1,3 @@
-package org.psnbtech;
-
 import java.awt.BorderLayout;
 import java.awt.Point;
 import java.awt.event.KeyAdapter;

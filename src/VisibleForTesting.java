@@ -1,6 +1,3 @@
-package org.psnbtech;
-
-
 import java.lang.annotation.Annotation;
 
 public abstract @interface VisibleForTesting {
