@@ -11,6 +11,7 @@ import javax.swing.JPanel;
  * contents of the game board.
  * @author Brendan Jones
  *
+ * subclass test initiator
  */
 public class BoardPanel extends JPanel {
 	

@@ -13,39 +13,9 @@ import javax.swing.JFrame;
  *
  */
 public class SnakeGame extends JFrame {
-		
-	protected static final long serialVersionUID = 6678292058307426314L;
 
-	protected static final long FRAME_TIME = 1000L / 50L;
-	
-	protected static final int MIN_SNAKE_LENGTH = 5;
-	
-	protected static final int MAX_DIRECTIONS = 3;
-	
-	protected BoardPanel board;
-	
-	protected SidePanel side;
-	
-	protected Random random;
-	
-	protected Clock logicTimer;
-	
-	protected boolean isNewGame;
-		
-	protected boolean isGameOver;
-	
-	protected boolean isPaused;
-	
-	protected LinkedList<Point> snake;
-	
-	protected LinkedList<Direction> directions;
-	
-	protected int score;
-	
-	protected int fruitsEaten;
-	
-	protected int nextFruitScore;
-	
+	protected final SnakeGameTestClass snakeGameTestClass = new SnakeGameTestClass();
+
 	/**
 	 * Creates a new SnakeGame instance. Creates a new window,
 	 * and sets up the controller input.
@@ -60,11 +30,11 @@ public class SnakeGame extends JFrame {
 		/*
 		 * Initialize the game's panels and add them to the window.
 		 */
-		this.board = new BoardPanel(this);
-		this.side = new SidePanel(this);
+		this.snakeGameTestClass.setBoard(new BoardPanel(this));
+		this.snakeGameTestClass.setSide(new SidePanel(this));
 		
-		add(board, BorderLayout.CENTER);
-		add(side, BorderLayout.EAST);
+		add(snakeGameTestClass.getBoard(), BorderLayout.CENTER);
+		add(snakeGameTestClass.getSide(), BorderLayout.EAST);
 		
 		/*
 		 * Adds a new key listener to the frame to process input. 
@@ -84,11 +54,11 @@ public class SnakeGame extends JFrame {
 				 */
 				case KeyEvent.VK_W:
 				case KeyEvent.VK_UP: // node 3
-					if(!isPaused && !isGameOver) {
-						if(directions.size() < MAX_DIRECTIONS) { //if true,->
-							Direction last = directions.peekLast(); //
+					if(!snakeGameTestClass.isPaused() && !snakeGameTestClass.isGameOver()) {
+						if(snakeGameTestClass.getDirections().size() < SnakeGameTestClass.MAX_DIRECTIONS) { //if true,->
+							Direction last = snakeGameTestClass.getDirections().peekLast(); //
 							if(last != Direction.South && last != Direction.North) { //
-								directions.addLast(Direction.North);
+								snakeGameTestClass.getDirections().addLast(Direction.North);
 							}
 						}
 					}
@@ -103,11 +73,11 @@ public class SnakeGame extends JFrame {
 				 */	
 				case KeyEvent.VK_S:
 				case KeyEvent.VK_DOWN: // node 4
-					if(!isPaused && !isGameOver) {
-						if(directions.size() < MAX_DIRECTIONS) {
-							Direction last = directions.peekLast();
+					if(!snakeGameTestClass.isPaused() && !snakeGameTestClass.isGameOver()) {
+						if(snakeGameTestClass.getDirections().size() < SnakeGameTestClass.MAX_DIRECTIONS) {
+							Direction last = snakeGameTestClass.getDirections().peekLast();
 							if(last != Direction.North && last != Direction.South) {
-								directions.addLast(Direction.South);
+								snakeGameTestClass.getDirections().addLast(Direction.South);
 							}
 						}
 					}
@@ -122,11 +92,11 @@ public class SnakeGame extends JFrame {
 				 */						
 				case KeyEvent.VK_A:
 				case KeyEvent.VK_LEFT: // node 5
-					if(!isPaused && !isGameOver) {
-						if(directions.size() < MAX_DIRECTIONS) {
-							Direction last = directions.peekLast();
+					if(!snakeGameTestClass.isPaused() && !snakeGameTestClass.isGameOver()) {
+						if(snakeGameTestClass.getDirections().size() < SnakeGameTestClass.MAX_DIRECTIONS) {
+							Direction last = snakeGameTestClass.getDirections().peekLast();
 							if(last != Direction.East && last != Direction.West) {
-								directions.addLast(Direction.West);
+								snakeGameTestClass.getDirections().addLast(Direction.West);
 							}
 						}
 					}
@@ -141,11 +111,11 @@ public class SnakeGame extends JFrame {
 				 */		
 				case KeyEvent.VK_D:
 				case KeyEvent.VK_RIGHT: // node 6
-					if(!isPaused && !isGameOver) {
-						if(directions.size() < MAX_DIRECTIONS) {
-							Direction last = directions.peekLast();
+					if(!snakeGameTestClass.isPaused() && !snakeGameTestClass.isGameOver()) {
+						if(snakeGameTestClass.getDirections().size() < SnakeGameTestClass.MAX_DIRECTIONS) {
+							Direction last = snakeGameTestClass.getDirections().peekLast();
 							if(last != Direction.West && last != Direction.East) {
-								directions.addLast(Direction.East);
+								snakeGameTestClass.getDirections().addLast(Direction.East);
 							}
 						}
 					}
@@ -156,9 +126,9 @@ public class SnakeGame extends JFrame {
 				 * the logicTimer's pause flag accordingly.
 				 */
 				case KeyEvent.VK_P: // node 7
-					if(!isGameOver) {
-						isPaused = !isPaused;
-						logicTimer.setPaused(isPaused);
+					if(!snakeGameTestClass.isGameOver()) {
+						snakeGameTestClass.setPaused(!snakeGameTestClass.isPaused());
+						snakeGameTestClass.getLogicTimer().setPaused(snakeGameTestClass.isPaused());
 					}
 					break;
 				
@@ -166,7 +136,7 @@ public class SnakeGame extends JFrame {
 				 * Reset the game if one is not currently in progress.
 				 */
 				case KeyEvent.VK_ENTER: // node 8
-					if(isNewGame || isGameOver) {
+					if(snakeGameTestClass.isNewGame() || snakeGameTestClass.isGameOver()) {
 						resetGame();
 					}
 					break;
@@ -188,14 +158,14 @@ public class SnakeGame extends JFrame {
 	 * The Serial Version UID.
 	 */
 	public static long getSerialVersionUID() {
-		return serialVersionUID;
+		return SnakeGameTestClass.serialVersionUID;
 	}
 
 	/**
 	 * The number of milliseconds that should pass between each frame.
 	 */
 	public static long getFrameTime() {
-		return FRAME_TIME;
+		return SnakeGameTestClass.FRAME_TIME;
 	}
 
 	/**
@@ -204,7 +174,7 @@ public class SnakeGame extends JFrame {
 	 * around on the board.
 	 */
 	public static int getMinSnakeLength() {
-		return MIN_SNAKE_LENGTH;
+		return SnakeGameTestClass.MIN_SNAKE_LENGTH;
 	}
 
 	/**
@@ -212,7 +182,7 @@ public class SnakeGame extends JFrame {
 	 * direction list.
 	 */
 	public static int getMaxDirections() {
-		return MAX_DIRECTIONS;
+		return SnakeGameTestClass.MAX_DIRECTIONS;
 	}
 
 	/**
@@ -223,14 +193,14 @@ public class SnakeGame extends JFrame {
 		/*
 		 * Initialize everything we're going to be using.
 		 */
-		this.random = new Random();
-		this.snake = new LinkedList<>();
-		this.directions = new LinkedList<>();
-		this.logicTimer = new Clock(9.0f);
-		this.isNewGame = true;
+		this.snakeGameTestClass.setRandom(new Random());
+		this.snakeGameTestClass.setSnake(new LinkedList<>());
+		this.snakeGameTestClass.setDirections(new LinkedList<>());
+		this.snakeGameTestClass.setLogicTimer(new Clock(9.0f));
+		this.snakeGameTestClass.setNewGame(true);
 		
 		//Set the timer to paused initially.
-		logicTimer.setPaused(true);
+		snakeGameTestClass.getLogicTimer().setPaused(true);
 
 		/*
 		 * This is the game loop. It will update and render the game and will
@@ -241,18 +211,18 @@ public class SnakeGame extends JFrame {
 			long start = System.nanoTime();
 			
 			//Update the logic timer.
-			logicTimer.update();
+			snakeGameTestClass.getLogicTimer().update();
 			
 			/*
 			 * If a cycle has elapsed on the logic timer, then update the game.
 			 */
-			if(logicTimer.hasElapsedCycle()) {
+			if(snakeGameTestClass.getLogicTimer().hasElapsedCycle()) {
 				updateGame();
 			}
 			
 			//Repaint the board and side panel with the new content.
-			board.repaint();
-			side.repaint();
+			snakeGameTestClass.getBoard().repaint();
+			snakeGameTestClass.getSide().repaint();
 			
 			/*
 			 * Calculate the delta time between since the start of the frame
@@ -260,9 +230,9 @@ public class SnakeGame extends JFrame {
 			 * incredibly accurate, it is sufficient for our purposes.
 			 */
 			long delta = (System.nanoTime() - start) / 1000000L;
-			if(delta < FRAME_TIME) {
+			if(delta < SnakeGameTestClass.FRAME_TIME) {
 				try {
-					Thread.sleep(FRAME_TIME - delta);
+					Thread.sleep(SnakeGameTestClass.FRAME_TIME - delta);
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
@@ -297,14 +267,14 @@ public class SnakeGame extends JFrame {
 		 * yield a higher score.
 		 */
 		if(collision == TileType.Fruit) {
-			fruitsEaten++;
-			score += nextFruitScore;
+			snakeGameTestClass.setFruitsEaten(snakeGameTestClass.getFruitsEaten() + 1);
+			snakeGameTestClass.setScore(snakeGameTestClass.getScore() + snakeGameTestClass.getNextFruitScore());
 			spawnFruit();
 		} else if(collision == TileType.SnakeBody) {
-			isGameOver = true;
-			logicTimer.setPaused(true);
-		} else if(nextFruitScore > 10) {
-			nextFruitScore--;
+			snakeGameTestClass.setGameOver(true);
+			snakeGameTestClass.getLogicTimer().setPaused(true);
+		} else if(snakeGameTestClass.getNextFruitScore() > 10) {
+			snakeGameTestClass.setNextFruitScore(snakeGameTestClass.getNextFruitScore() - 1);
 		}
 	}
 	
@@ -321,13 +291,13 @@ public class SnakeGame extends JFrame {
 		 * where the snake's direction will change after a game over (though
 		 * it will not move).
 		 */
-		Direction direction = directions.peekFirst();
+		Direction direction = snakeGameTestClass.getDirections().peekFirst();
 				
 		/*
 		 * Here we calculate the new point that the snake's head will be at
 		 * after the update.
 		 */		
-		Point head = new Point(snake.peekFirst());
+		Point head = new Point(snakeGameTestClass.getSnake().peekFirst());
 		switch(direction) {
 		case North:
 			head.y--;
@@ -364,11 +334,11 @@ public class SnakeGame extends JFrame {
 		 * incase the tile we hit was the tail piece that was just removed
 		 * to prevent a false game over.
 		 */
-		TileType old = board.getTile(head.x, head.y);
-		if(old != TileType.Fruit && snake.size() > MIN_SNAKE_LENGTH) {
-			Point tail = snake.removeLast();
-			board.setTile(tail, null);
-			old = board.getTile(head.x, head.y);
+		TileType old = snakeGameTestClass.getBoard().getTile(head.x, head.y);
+		if(old != TileType.Fruit && snakeGameTestClass.getSnake().size() > SnakeGameTestClass.MIN_SNAKE_LENGTH) {
+			Point tail = snakeGameTestClass.getSnake().removeLast();
+			snakeGameTestClass.getBoard().setTile(tail, null);
+			old = snakeGameTestClass.getBoard().getTile(head.x, head.y);
 		}
 		
 		/*
@@ -383,11 +353,11 @@ public class SnakeGame extends JFrame {
 		 * input.
 		 */
 		if(old != TileType.SnakeBody) {
-			board.setTile(snake.peekFirst(), TileType.SnakeBody);
-			snake.push(head);
-			board.setTile(head, TileType.SnakeHead);
-			if(directions.size() > 1) {
-				directions.poll();
+			snakeGameTestClass.getBoard().setTile(snakeGameTestClass.getSnake().peekFirst(), TileType.SnakeBody);
+			snakeGameTestClass.getSnake().push(head);
+			snakeGameTestClass.getBoard().setTile(head, TileType.SnakeHead);
+			if(snakeGameTestClass.getDirections().size() > 1) {
+				snakeGameTestClass.getDirections().poll();
 			}
 		}
 				
@@ -403,14 +373,14 @@ public class SnakeGame extends JFrame {
 		 * Reset the score statistics. (Note that nextFruitPoints is reset in
 		 * the spawnFruit function later on).
 		 */
-		this.score = 0;
-		this.fruitsEaten = 0;
+		this.snakeGameTestClass.setScore(0);
+		this.snakeGameTestClass.setFruitsEaten(0);
 		
 		/*
 		 * Reset both the new game and game over flags.
 		 */
-		this.isNewGame = false;
-		this.isGameOver = false;
+		this.snakeGameTestClass.setNewGame(false);
+		this.snakeGameTestClass.setGameOver(false);
 		
 		/*
 		 * Create the head at the center of the board.
@@ -420,26 +390,26 @@ public class SnakeGame extends JFrame {
 		/*
 		 * Clear the snake list and add the head.
 		 */
-		snake.clear();
-		snake.add(head);
+		snakeGameTestClass.getSnake().clear();
+		snakeGameTestClass.getSnake().add(head);
 		
 		/*
 		 * Clear the board and add the head.
 		 */
-		board.clearBoard();
-		board.setTile(head, TileType.SnakeHead);
+		snakeGameTestClass.getBoard().clearBoard();
+		snakeGameTestClass.getBoard().setTile(head, TileType.SnakeHead);
 		 
 		/*
 		 * Clear the directions and add north as the
 		 * default direction.
 		 */
-		directions.clear();
-		directions.add(Direction.North);
+		snakeGameTestClass.getDirections().clear();
+		snakeGameTestClass.getDirections().add(Direction.North);
 		
 		/*
 		 * Reset the logic timer.
 		 */
-		logicTimer.reset();
+		snakeGameTestClass.getLogicTimer().reset();
 		
 		/*
 		 * Spawn a new fruit.
@@ -454,7 +424,7 @@ public class SnakeGame extends JFrame {
 	 * @return The new game flag.
 	 */
 	public boolean isNewGame() {
-		return isNewGame;
+		return snakeGameTestClass.isNewGame();
 	}
 	
 	/**
@@ -464,7 +434,7 @@ public class SnakeGame extends JFrame {
 	 * @return The game over flag.
 	 */
 	public boolean isGameOver() {
-		return isGameOver;
+		return snakeGameTestClass.isGameOver();
 	}
 	
 	/**
@@ -474,7 +444,7 @@ public class SnakeGame extends JFrame {
 	 * @return The paused flag.
 	 */
 	public boolean isPaused() {
-		return isPaused;
+		return snakeGameTestClass.isPaused();
 	}
 	
 	/**
@@ -483,12 +453,12 @@ public class SnakeGame extends JFrame {
 	@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 	public void spawnFruit() {
 		//Reset the score for this fruit to 100.
-		this.nextFruitScore = 100;
+		this.snakeGameTestClass.setNextFruitScore(100);
 
 		/*
 		 * Get a random index based on the number of free spaces left on the board.
 		 */
-		int index = random.nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snake.size());
+		int index = snakeGameTestClass.getRandom().nextInt(BoardPanel.COL_COUNT * BoardPanel.ROW_COUNT - snakeGameTestClass.getSnake().size());
 		
 		/*
 		 * While we could just as easily choose a random index on the board
@@ -503,10 +473,10 @@ public class SnakeGame extends JFrame {
 		int freeFound = -1;
 		for(int x = 0; x < BoardPanel.COL_COUNT; x++) {
 			for(int y = 0; y < BoardPanel.ROW_COUNT; y++) {
-				TileType type = board.getTile(x, y);
+				TileType type = snakeGameTestClass.getBoard().getTile(x, y);
 				if(type == null || type == TileType.Fruit) {
 					if(++freeFound == index) {
-						board.setTile(x, y, TileType.Fruit);
+						snakeGameTestClass.getBoard().setTile(x, y, TileType.Fruit);
 						break;
 					}
 				}
@@ -521,7 +491,7 @@ public class SnakeGame extends JFrame {
 	 * @return The score.
 	 */
 	public int getScore() {
-		return score;
+		return snakeGameTestClass.getScore();
 	}
 	
 	/**
@@ -531,7 +501,7 @@ public class SnakeGame extends JFrame {
 	 * @return The fruits eaten.
 	 */
 	public int getFruitsEaten() {
-		return fruitsEaten;
+		return snakeGameTestClass.getFruitsEaten();
 	}
 	
 	/**
@@ -541,7 +511,7 @@ public class SnakeGame extends JFrame {
 	 * @return The next fruit score.
 	 */
 	public int getNextFruitScore() {
-		return nextFruitScore;
+		return snakeGameTestClass.getNextFruitScore();
 	}
 	
 	/**
@@ -549,7 +519,7 @@ public class SnakeGame extends JFrame {
 	 * @return The current direction.
 	 */
 	public Direction getDirection() {
-		return directions.peek();
+		return snakeGameTestClass.getDirections().peek();
 	}
 	
 	/**
@@ -565,89 +535,89 @@ public class SnakeGame extends JFrame {
 	 * The BoardPanel instance.
 	 */
 	public BoardPanel getBoard() {
-		return board;
+		return snakeGameTestClass.getBoard();
 	}
 
 	public void setBoard(BoardPanel board) {
-		this.board = board;
+		this.snakeGameTestClass.setBoard(board);
 	}
 
 	/**
 	 * The SidePanel instance.
 	 */
 	public SidePanel getSide() {
-		return side;
+		return snakeGameTestClass.getSide();
 	}
 
 	public void setSide(SidePanel side) {
-		this.side = side;
+		this.snakeGameTestClass.setSide(side);
 	}
 
 	/**
 	 * The random number generator (used for spawning fruits).
 	 */
 	public Random getRandom() {
-		return random;
+		return snakeGameTestClass.getRandom();
 	}
 
 	public void setRandom(Random random) {
-		this.random = random;
+		this.snakeGameTestClass.setRandom(random);
 	}
 
 	/**
 	 * The Clock instance for handling the game logic.
 	 */
 	public Clock getLogicTimer() {
-		return logicTimer;
+		return snakeGameTestClass.getLogicTimer();
 	}
 
 	public void setLogicTimer(Clock logicTimer) {
-		this.logicTimer = logicTimer;
+		this.snakeGameTestClass.setLogicTimer(logicTimer);
 	}
 
 	public void setNewGame(boolean newGame) {
-		isNewGame = newGame;
+		snakeGameTestClass.setNewGame(newGame);
 	}
 
 	public void setGameOver(boolean gameOver) {
-		isGameOver = gameOver;
+		snakeGameTestClass.setGameOver(gameOver);
 	}
 
 	public void setPaused(boolean paused) {
-		isPaused = paused;
+		snakeGameTestClass.setPaused(paused);
 	}
 
 	/**
 	 * The list that contains the points for the snake.
 	 */
 	public LinkedList<Point> getSnake() {
-		return snake;
+		return snakeGameTestClass.getSnake();
 	}
 
 	public void setSnake(LinkedList<Point> snake) {
-		this.snake = snake;
+		this.snakeGameTestClass.setSnake(snake);
 	}
 
 	/**
 	 * The list that contains the queued directions.
 	 */
 	public LinkedList<Direction> getDirections() {
-		return directions;
+		return snakeGameTestClass.getDirections();
 	}
 
 	public void setDirections(LinkedList<Direction> directions) {
-		this.directions = directions;
+		this.snakeGameTestClass.setDirections(directions);
 	}
 
 	public void setScore(int score) {
-		this.score = score;
+		this.snakeGameTestClass.setScore(score);
 	}
 
 	public void setFruitsEaten(int fruitsEaten) {
-		this.fruitsEaten = fruitsEaten;
+		this.snakeGameTestClass.setFruitsEaten(fruitsEaten);
 	}
 
 	public void setNextFruitScore(int nextFruitScore) {
-		this.nextFruitScore = nextFruitScore;
+		this.snakeGameTestClass.setNextFruitScore(nextFruitScore);
 	}
 }
