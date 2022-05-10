@@ -15,10 +15,12 @@ public class BoardPanelTest {
 		
 		bp.clearBoard();
 		
+		assertEquals(bp.getTile(0, 0), null);
+		
 		Point pnt = new Point(BoardPanel.TILE_SIZE, BoardPanel.ROW_COUNT-15);
 		
 		bp.setTile(pnt, bp.getTile(0, 0));
 		
-		assertEquals(bp.getTile(0, 0), null);
+		assertEquals(bp.getTile(pnt.x, pnt.y), bp.getTile(0, 0));
 	}		
 }
