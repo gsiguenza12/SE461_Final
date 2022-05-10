@@ -15,6 +15,6 @@ class SidePanelTest {
     }
 
     @Test
-    void paintComponent() {
+    void paintComponentTest() {
     }
 }

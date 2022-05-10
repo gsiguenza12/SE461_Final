@@ -60,12 +60,14 @@ public class BoardPanel extends JPanel {
 	/**
 	 * The SnakeGame instance.
 	 */
-	private SnakeGame game;
+	@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+	public SnakeGame game;
 	
 	/**
 	 * The array of tiles that make up this board.
 	 */
-	private TileType[] tiles;
+	@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+	public TileType[] tiles;
 		
 	/**
 	 * Creates a new BoardPanel instance.
@@ -195,7 +197,8 @@ public class BoardPanel extends JPanel {
 	 * @param type The type of tile to draw.
 	 * @param g The graphics object to draw to.
 	 */
-	private void drawTile(int x, int y, TileType type, Graphics g) {
+	@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+	public void drawTile(int x, int y, TileType type, Graphics g) {
 		/*
 		 * Because each type of tile is drawn differently, it's easiest
 		 * to just run through a switch statement rather than come up with some
